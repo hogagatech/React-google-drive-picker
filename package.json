@@ -1,7 +1,7 @@
 {
-  "name": "react-google-drive-picker",
-  "version": "1.2.2",
-  "description": "React google drive picker api",
+  "name": "react-nextjs-google-drive-picker",
+  "version": "2.0.1",
+  "description": "React/Nextjs google drive picker api",
   "types": "./dist",
   "main": "./dist/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "author": "HogagaTech",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hogagatech/React-google-drive-picker.git"
+    "url": "git+https://github.com/hogagatech/React-google-drive-picker.git"
   },
   "bugs": {
     "url": "https://github.com/hogagatech/React-google-drive-picker/issues"
@@ -41,10 +41,11 @@
     "nodemon": "^2.0.7",
     "prettier": "2.3.2",
     "prettier-eslint": "^12.0.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.9.5"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
-  }
+  },
+  "homepage": "https://github.com/hogagatech/React-google-drive-picker#readme"
 }
