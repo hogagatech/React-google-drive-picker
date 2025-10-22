@@ -15,7 +15,7 @@ export default function useDrivePicker(): [
   authResult | undefined
 ] {
   // const defaultScopes = ['https://www.googleapis.com/auth/drive.readonly']
-  const defaultScopes = ['https://www.googleapis.com/auth/drive.file'] //this scope allows read files created or opened by the app
+  const defaultScopes = ['https://www.googleapis.com/auth/drive.file'] //this scope allows read files without verification
   const [loaded, error] = useInjectScript('https://apis.google.com/js/api.js')
   const [loadedGsi, errorGsi] = useInjectScript(
     'https://accounts.google.com/gsi/client'
@@ -123,9 +123,6 @@ export default function useDrivePicker(): [
     callbackFunction,
   }: PickerConfiguration) => {
     if (disabled) return false
-
-    console.log('Creating picker')
-    console.log(appId, 'appId')
 
     const view = new google.picker.DocsView(google.picker.ViewId[viewId])
     if (viewMimeTypes) view.setMimeTypes(viewMimeTypes)
