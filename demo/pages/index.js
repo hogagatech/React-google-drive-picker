@@ -1,7 +1,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import React, { useEffect, useRef, useState } from "react";
-import useDrivePicker from 'react-google-drive-picker';
+import useDrivePicker from 'react-nextjs-google-drive-picker';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
