@@ -124,6 +124,9 @@ export default function useDrivePicker(): [
   }: PickerConfiguration) => {
     if (disabled) return false
 
+    console.log('Creating picker')
+    console.log(appId, 'appId')
+
     const view = new google.picker.DocsView(google.picker.ViewId[viewId])
     if (viewMimeTypes) view.setMimeTypes(viewMimeTypes)
     if (setIncludeFolders) view.setIncludeFolders(true)
