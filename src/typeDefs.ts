@@ -23,13 +23,15 @@ export type PickerCallback = {
   docs: CallbackDoc[]
 }
 
-export type authResult =  {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-  authuser: string;
-  prompt: string;
+export type authResult = {
+  access_token: string
+  token_type: string
+  expires_in: number
+  scope: string
+  authuser: string
+  prompt: string
+  error?: string
+  error_description?: string
 }
 
 type ViewIdOptions =
@@ -66,6 +68,7 @@ export type PickerConfiguration = {
   customViews?: any[]
   locale?: string
   customScopes?: string[]
+  uxMode?: 'popup' | 'redirect'
   callbackFunction: (data: PickerCallback) => any
 }
 
@@ -73,5 +76,6 @@ export const defaultConfiguration: PickerConfiguration = {
   clientId: '',
   developerKey: '',
   viewId: 'DOCS',
+  uxMode: 'popup',
   callbackFunction: () => null,
 }

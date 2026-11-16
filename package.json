@@ -1,6 +1,6 @@
 {
   "name": "react-nextjs-google-drive-picker",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "React/Nextjs google drive picker api",
   "types": "./dist",
   "main": "./dist/index.js",

@@ -14,15 +14,13 @@ export default function useDrivePicker(): [
   (config: PickerConfiguration) => boolean | undefined,
   authResult | undefined
 ] {
-  // const defaultScopes = ['https://www.googleapis.com/auth/drive.readonly']
-  const defaultScopes = ['https://www.googleapis.com/auth/drive.file'] //this scope allows read files without verification
+  const defaultScopes = ['https://www.googleapis.com/auth/drive.file']
   const [loaded, error] = useInjectScript('https://apis.google.com/js/api.js')
   const [loadedGsi, errorGsi] = useInjectScript(
     'https://accounts.google.com/gsi/client'
   )
   const [pickerApiLoaded, setpickerApiLoaded] = useState(false)
   const [openAfterAuth, setOpenAfterAuth] = useState(false)
-  const [authWindowVisible, setAuthWindowVisible] = useState(false)
   const [config, setConfig] =
     useState<PickerConfiguration>(defaultConfiguration)
   const [authRes, setAuthRes] = useState<authResult>()
@@ -30,14 +28,14 @@ export default function useDrivePicker(): [
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let picker: any
 
-  // get the apis from googleapis
+  // load the Google APIs
   useEffect(() => {
     if (loaded && !error && loadedGsi && !errorGsi && !pickerApiLoaded) {
       loadApis()
     }
   }, [loaded, error, loadedGsi, errorGsi, pickerApiLoaded])
 
-  // use effect to open picker after auth
+  // effect to open picker after auth
   useEffect(() => {
     if (
       openAfterAuth &&
@@ -63,10 +61,9 @@ export default function useDrivePicker(): [
 
   // open the picker
   const openPicker = (config: PickerConfiguration) => {
-    // global scope given conf
     setConfig(config)
 
-    // if we didnt get token generate token.
+    // If we don't have an access token, initialize the OAuth token client with new requirements
     if (!config.token) {
       const client = google.accounts.oauth2.initTokenClient({
         client_id: config.clientId,
@@ -74,27 +71,33 @@ export default function useDrivePicker(): [
           ? [...defaultScopes, ...config.customScopes]
           : defaultScopes
         ).join(' '),
+        // Launch OAuth exclusively via redirect in standard browser environment (not embedded webview)
+        ux_mode: config.uxMode || 'popup', 
         callback: (tokenResponse: authResult) => {
           setAuthRes(tokenResponse)
           createPicker({ ...config, token: tokenResponse.access_token })
         },
       })
 
-      client.requestAccessToken()
+      // Request access token with prompt=consent and trigger_onepick=true
+      client.requestAccessToken({
+        prompt: 'consent',
+        trigger_onepick: 'true',
+      })
+      return
     }
 
-    // if we have token and everything is loaded open the picker
+    // If token exists and API loaded, create picker directly
     if (config.token && loaded && !error && pickerApiLoaded) {
       return createPicker(config)
     }
   }
 
-  // load the Drive picker api
+  // load the Drive picker API
   const loadApis = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    window.gapi.load('auth')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    window.gapi.load('picker', { callback: onPickerApiLoad })
+    if (window.gapi) {
+      window.gapi.load('picker', { callback: onPickerApiLoad })
+    }
   }
 
   const onPickerApiLoad = () => {
@@ -103,7 +106,6 @@ export default function useDrivePicker(): [
 
   const createPicker = ({
     token,
-    // appId = '',
     appId,
     supportDrives = false,
     developerKey,
@@ -151,7 +153,7 @@ export default function useDrivePicker(): [
     }
 
     if (customViews) {
-      customViews.map((view) => picker.addView(view))
+      customViews.forEach((view: any) => picker.addView(view))
     }
 
     if (multiselect) {
